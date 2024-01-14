@@ -14,10 +14,6 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Show file content
-      run: |
-        cat account.go
-
     - name: Set up Go
       uses: actions/setup-go@v4
       with:
