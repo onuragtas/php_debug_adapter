@@ -1,0 +1,5 @@
+.vscode
+settings.json
+__debug_bin
+.idea
+php_debug_adapter
