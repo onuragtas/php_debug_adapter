@@ -1,5 +1,11 @@
 # PHP DEBUG ADAPTER
 
+```
+wget https://github.com/onuragtas/php_debug_adapter/releases/latest/download/php_debug_adapter_Darwin_arm64 -O /usr/local/bin/pda
+chmod +x /usr/local/bin/pda
+pda
+```
+
 ### Example Settings
 ```
 {
