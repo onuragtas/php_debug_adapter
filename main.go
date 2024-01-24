@@ -33,7 +33,18 @@ func main() {
 	log.Println("Proxy listening on", settings.Listen, "...")
 	for {
 		conn, err := listener.Accept()
-		proxy := proxy2.Proxy{Src: conn, OnResponse: onResponse, OnRequest: onRequest, RequestHost: setDestination}
+		proxy := proxy2.Proxy{
+			Src:         conn,
+			OnResponse:  onResponse,
+			OnRequest:   onRequest,
+			RequestHost: setDestination,
+			OnCloseSource: func(conn net.Conn) {
+				log.Println("Connection closed from", conn.RemoteAddr().String())
+			},
+			OnCloseDestination: func(conn net.Conn) {
+				log.Println("Connection closed to", conn.RemoteAddr().String())
+			},
+		}
 		if err != nil {
 			fmt.Println("Accept Error:", err)
 			continue
@@ -42,11 +53,15 @@ func main() {
 	}
 }
 
-func onRequest(srcLocal, srcRemote, dstLocal, dstRemote string, request []byte) {
+func onRequest(srcLocal, srcRemote, dstLocal, dstRemote string, request []byte, srcConnection net.Conn, dstConnection net.Conn) {
 	log.Println(srcLocal, "->", srcRemote, "->", dstLocal, "->", dstRemote, string(request))
+	if strings.Contains(string(request), "tatus=\"stopping\"") {
+		srcConnection.Close()
+		dstConnection.Close()
+	}
 }
 
-func onResponse(dstRemote, dstLocal, srcRemote, srcLocal string, response []byte) {
+func onResponse(dstRemote, dstLocal, srcRemote, srcLocal string, response []byte, srcConnection net.Conn, dstConnection net.Conn) {
 	log.Println(dstRemote, "->", dstLocal, "->", srcRemote, "->", srcLocal)
 }
 
