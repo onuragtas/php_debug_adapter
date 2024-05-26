@@ -42,7 +42,9 @@ func main() {
 				log.Println("Connection closed from", conn.RemoteAddr().String())
 			},
 			OnCloseDestination: func(conn net.Conn) {
-				log.Println("Connection closed to", conn.RemoteAddr().String())
+				if conn != nil && conn.RemoteAddr() != nil && conn.RemoteAddr().String() != "" {
+					log.Println("Connection closed to", conn.RemoteAddr().String())
+				}
 			},
 		}
 		if err != nil {
