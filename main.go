@@ -34,6 +34,7 @@ func main() {
 	for {
 		conn, err := listener.Accept()
 		proxy := proxy2.Proxy{
+			Timeout:     200,
 			Src:         conn,
 			OnResponse:  onResponse,
 			OnRequest:   onRequest,
